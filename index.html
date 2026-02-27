@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 H1 · AI全景 · 内部布道</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f2ed;
+    --accent: #e63312;
+    --accent2: #ff6b35;
+    --blue: #1a56db;
+    --blue-light: #e8effc;
+    --green: #059669;
+    --green-light: #ecfdf5;
+    --gold: #d97706;
+    --gold-light: #fffbeb;
+    --gray-100: #f7f5f2;
+    --gray-200: #e8e4de;
+    --gray-400: #9c9588;
+    --gray-600: #6b6560;
+    --gray-800: #2d2a26;
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    position: relative;
+    background: var(--ink); color: var(--paper);
+    padding: 60px 40px; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(230,51,18,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 30%, rgba(26,86,219,0.1) 0%, transparent 50%);
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes drift { 0% { transform: translate(0,0) rotate(0deg); } 100% { transform: translate(-5%,3%) rotate(2deg); } }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 900px; }
+  .hero-badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); border: 1px solid rgba(230,51,18,0.4);
+    padding: 8px 24px; border-radius: 100px; margin-bottom: 40px;
+    animation: fadeUp 0.8s ease-out both;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif; font-weight: 900;
+    font-size: clamp(42px, 7vw, 80px); line-height: 1.15;
+    letter-spacing: -1px; margin-bottom: 28px;
+    animation: fadeUp 0.8s 0.15s ease-out both;
+  }
+  .hero h1 .em {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-sub {
+    font-size: 20px; font-weight: 300; color: rgba(245,242,237,0.7);
+    max-width: 600px; margin: 0 auto;
+    animation: fadeUp 0.8s 0.3s ease-out both;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .scroll-hint {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    z-index: 1; animation: bounce 2s infinite; color: var(--gray-400);
+    font-size: 13px; letter-spacing: 2px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .scroll-hint svg { width: 20px; height: 20px; }
+  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+  /* ── Sections ── */
+  .section { max-width: 1100px; margin: 0 auto; padding: 100px 40px; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .section-title { font-family: 'Noto Serif SC', serif; font-size: clamp(28px,4vw,44px); font-weight: 900; line-height: 1.25; margin-bottom: 20px; max-width: 700px; }
+  .section-desc { font-size: 17px; color: var(--gray-600); max-width: 640px; margin-bottom: 48px; }
+
+  /* ── Client Cards ── */
+  .client-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  @media (max-width: 768px) { .client-grid { grid-template-columns: 1fr; } }
+  .client-card {
+    border: 1px solid var(--gray-200); border-radius: var(--radius-lg);
+    padding: 36px 28px; background: #fff;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex; flex-direction: column;
+  }
+  .client-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+  .client-card-tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 100px; margin-bottom: 20px; align-self: flex-start;
+  }
+  .client-card:nth-child(1) .client-card-tag { background: rgba(230,51,18,0.1); color: var(--accent); }
+  .client-card:nth-child(2) .client-card-tag { background: var(--blue-light); color: var(--blue); }
+  .client-card:nth-child(3) .client-card-tag { background: var(--green-light); color: var(--green); }
+  .client-card h3 { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 700; margin-bottom: 16px; line-height: 1.3; }
+  .client-card-pain { font-size: 14px; color: var(--gray-600); margin-bottom: 20px; line-height: 1.7; flex: 1; }
+  .client-card-solution { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.6; padding-top: 20px; border-top: 1px solid var(--gray-200); }
+
+  /* ── Margin Compare ── */
+  .margin-compare { display: flex; gap: 32px; align-items: stretch; margin-bottom: 48px; }
+  @media (max-width: 768px) { .margin-compare { flex-direction: column; } }
+  .margin-box { flex: 1; border-radius: var(--radius-lg); padding: 36px 28px; position: relative; }
+  .margin-old { background: var(--gray-100); border: 1px solid var(--gray-200); }
+  .margin-new { background: linear-gradient(135deg, rgba(230,51,18,0.06), rgba(255,107,53,0.06)); border: 2px solid var(--accent); }
+  .margin-box-label { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+  .margin-old .margin-box-label { color: var(--gray-400); }
+  .margin-new .margin-box-label { color: var(--accent); }
+  .margin-team { font-size: 14px; margin-bottom: 16px; color: var(--gray-600); }
+  .margin-team strong { color: var(--ink); }
+  .margin-bar-wrap { background: var(--gray-200); border-radius: 8px; height: 36px; overflow: hidden; margin-bottom: 8px; }
+  .margin-bar { height: 100%; border-radius: 8px; display: flex; align-items: center; padding-left: 12px; font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: #fff; }
+  .margin-old .margin-bar { width: 15%; background: var(--gray-400); }
+  .margin-new .margin-bar { width: 70%; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .margin-percent { font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 600; margin-top: 12px; }
+  .margin-old .margin-percent { color: var(--gray-400); }
+  .margin-new .margin-percent { color: var(--accent); }
+  .vs-badge { position: absolute; top: 50%; right: -42px; transform: translateY(-50%); background: var(--ink); color: var(--paper); width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; z-index: 2; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  @media (max-width: 768px) { .vs-badge { display: none; } }
+
+  /* ── SKU ── */
+  .sku-section { background: #fff; }
+  .sku-category-title { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; padding-top: 12px; }
+  .sku-category-desc { font-size: 14px; color: var(--gray-600); margin-bottom: 24px; }
+  .sku-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 16px; margin-bottom: 48px; }
+  .sku-item { border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 24px 20px; background: var(--gray-100); transition: border-color 0.2s; }
+  .sku-item:hover { border-color: var(--accent); }
+  .sku-item-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .sku-item-desc { font-size: 13px; color: var(--gray-600); margin-bottom: 12px; }
+  .sku-item-client { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--gray-400); }
+
+  /* ── Case Highlight ── */
+  .case-highlight {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: var(--paper); border-radius: var(--radius-lg);
+    padding: 36px 36px 28px; margin: 24px 0;
+    position: relative; overflow: hidden;
+  }
+  .case-highlight::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='g' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23g)' width='60' height='60'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .case-highlight-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--accent2); margin-bottom: 10px; position: relative; }
+  .case-highlight h3 { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 700; margin-bottom: 6px; position: relative; }
+  .case-highlight-sub { font-size: 13px; color: rgba(245,242,237,0.5); margin-bottom: 20px; position: relative; }
+
+  /* ── Case grid: 5 channels in one block ── */
+  .case-mega {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: var(--paper); border-radius: var(--radius-lg);
+    padding: 48px 40px 36px; margin: 32px 0 48px;
+    position: relative; overflow: hidden;
+  }
+  .case-mega::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='g' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(255,255,255,0.04)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23g)' width='60' height='60'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .case-mega-header { position: relative; margin-bottom: 32px; }
+  .case-mega-header .case-highlight-label { margin-bottom: 8px; }
+  .case-mega-header h2 { font-family: 'Noto Serif SC', serif; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .case-mega-header p { font-size: 14px; color: rgba(245,242,237,0.5); }
+
+  .channel-section { position: relative; margin-bottom: 28px; }
+  .channel-section:last-child { margin-bottom: 0; }
+  .channel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent2); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .channel-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+
+  /* ── Phone gallery ── */
+  .phone-gallery {
+    display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px;
+    position: relative; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    align-items: stretch;
+  }
+  .phone-gallery::-webkit-scrollbar { height: 3px; }
+  .phone-gallery::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 2px; }
+  .phone-gallery::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+  .phone-card {
+    flex-shrink: 0; width: 140px; height: 260px; border-radius: 12px; overflow: hidden;
+    position: relative; background: #000; scroll-snap-align: start;
+    transition: transform 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .phone-card:hover { transform: scale(1.04); }
+  .phone-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .phone-card-landscape { width: 260px; height: 180px; }
+  .phone-card-narrow { width: 120px; }
+  .phone-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 36px 10px 10px; display: flex; flex-direction: column; gap: 2px;
+  }
+  .phone-likes { font-size: 11px; color: #ff4d6a; font-weight: 600; font-family: 'JetBrains Mono', monospace; }
+  .phone-name { font-size: 10px; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── Flywheel ── */
+  .flywheel-wrap {
+    background: var(--ink); color: var(--paper); border-radius: var(--radius-lg);
+    padding: 60px 48px; margin-bottom: 48px; position: relative; overflow: hidden;
+  }
+  .flywheel-wrap::after { content: ''; position: absolute; right: -80px; top: -80px; width: 300px; height: 300px; border-radius: 50%; border: 1px solid rgba(230,51,18,0.2); animation: spin 30s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .flywheel-title { font-family: 'Noto Serif SC', serif; font-size: 28px; font-weight: 700; margin-bottom: 32px; }
+  .flywheel-chain { display: flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center; }
+  .flywheel-node { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius); padding: 20px 24px; text-align: center; min-width: 160px; flex: 1; }
+  .flywheel-node-icon { font-size: 28px; margin-bottom: 8px; }
+  .flywheel-node-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .flywheel-node-sub { font-size: 12px; color: rgba(245,242,237,0.5); }
+  .flywheel-arrow { font-size: 24px; color: var(--accent); padding: 0 8px; flex-shrink: 0; }
+  @media (max-width: 768px) { .flywheel-chain { flex-direction: column; } .flywheel-arrow { transform: rotate(90deg); } }
+
+  /* ── Future ── */
+  .future-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .future-grid { grid-template-columns: 1fr; } }
+  .future-card { border-radius: var(--radius-lg); padding: 40px 32px; position: relative; overflow: hidden; }
+  .future-card:nth-child(1) { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; }
+  .future-card:nth-child(2) { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1px solid #a7f3d0; }
+  .future-card-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+  .future-card:nth-child(1) .future-card-tag { color: var(--blue); }
+  .future-card:nth-child(2) .future-card-tag { color: var(--green); }
+  .future-card h3 { font-family: 'Noto Serif SC', serif; font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+  .future-card-insight { font-size: 14px; color: var(--gray-600); margin-bottom: 20px; padding: 12px 16px; border-radius: 8px; background: rgba(255,255,255,0.6); border-left: 3px solid; }
+  .future-card:nth-child(1) .future-card-insight { border-color: var(--blue); }
+  .future-card:nth-child(2) .future-card-insight { border-color: var(--green); }
+  .future-card-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; font-weight: 500; }
+  .future-card-flow .step { background: rgba(255,255,255,0.7); padding: 6px 14px; border-radius: 100px; white-space: nowrap; }
+  .future-card-flow .arrow { color: var(--gray-400); font-size: 16px; }
+  .future-card-ref { margin-top: 16px; font-size: 12px; color: var(--gray-400); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Story ── */
+  .story-section { background: var(--ink); color: var(--paper); padding: 80px 40px; }
+  .story-inner { max-width: 1100px; margin: 0 auto; }
+  .story-steps { display: flex; gap: 32px; margin-top: 40px; }
+  @media (max-width: 768px) { .story-steps { flex-direction: column; } }
+  .story-step { flex: 1; padding: 28px 24px; border-radius: var(--radius); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); }
+  .story-step-num { font-family: 'JetBrains Mono', monospace; font-size: 48px; font-weight: 600; color: rgba(230,51,18,0.3); line-height: 1; margin-bottom: 12px; }
+  .story-step h4 { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .story-step p { font-size: 14px; color: rgba(245,242,237,0.6); line-height: 1.6; }
+  .story-data { display: flex; gap: 48px; margin-top: 48px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; justify-content: center; }
+  .story-datum { text-align: center; }
+  .story-datum-value { font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 600; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .story-datum-label { font-size: 13px; color: var(--gray-400); margin-top: 4px; }
+
+  /* ── Roadmap ── */
+  .roadmap-track { display: flex; gap: 0; position: relative; margin-top: 40px; }
+  .roadmap-track::before { content: ''; position: absolute; top: 52px; left: 0; right: 0; height: 3px; background: var(--gray-200); }
+  @media (max-width: 768px) { .roadmap-track { flex-direction: column; gap: 24px; } .roadmap-track::before { top: 0; bottom: 0; left: 24px; width: 3px; height: auto; right: auto; } }
+  .roadmap-item { flex: 1; text-align: center; position: relative; padding-top: 72px; }
+  .roadmap-dot { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); width: 24px; height: 24px; border-radius: 50%; border: 3px solid var(--accent); background: var(--paper); z-index: 1; }
+  .roadmap-item:first-child .roadmap-dot { background: var(--accent); }
+  .roadmap-time { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 8px; }
+  .roadmap-action { font-size: 14px; color: var(--gray-600); max-width: 200px; margin: 0 auto; }
+
+  /* ── MVP ── */
+  .mvp-table-wrap { overflow-x: auto; margin-top: 32px; border-radius: var(--radius); border: 1px solid var(--gray-200); }
+  .mvp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .mvp-table thead { background: var(--ink); color: var(--paper); }
+  .mvp-table th { padding: 14px 20px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+  .mvp-table td { padding: 16px 20px; border-bottom: 1px solid var(--gray-200); vertical-align: top; }
+  .mvp-table tr:last-child td { border-bottom: none; }
+  .mvp-table tbody tr { transition: background 0.15s; }
+  .mvp-table tbody tr:hover { background: var(--gray-100); }
+  .mvp-name { font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .mvp-origin { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+  .mvp-time { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+
+  .section-divider { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+  .section-divider hr { border: none; height: 1px; background: var(--gray-200); }
+
+  /* ── Video in phone-card ── */
+  .phone-card video {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block; border-radius: 0;
+  }
+  .phone-card .play-btn {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(0,0,0,0.55); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 2;
+  }
+  .phone-card .play-btn.hidden { opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- ════ HERO ════ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Internal · 2026 H1</div>
+    <h1>用AI帮企业<br>做内容、<span class="em">做营销</span></h1>
+    <p class="hero-sub">从卖人力到收租——我们正在搭建一个AI驱动的内容与营销平台</p>
+  </div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- ════ THREE CLIENTS ════ -->
+<section class="section">
+  <div class="section-label">01 · 三类客户</div>
+  <div class="section-title">三种客户，三种服务方式</div>
+  <p class="section-desc">现在靠服务大客户赚钱，未来把服务中沉淀的能力平台化，覆盖中小商家和一线销售。</p>
+  <div class="client-grid">
+    <div class="client-card">
+      <div class="client-card-tag">已跑通 · 正在卖</div>
+      <h3>大客户<br>烟草 / 保险 / 金融</h3>
+      <p class="client-card-pain">有预算，但传统团队（策划+编导+摄像+剪辑+设计）成本高、周期长</p>
+      <p class="client-card-solution">代运营 + AI互动活动：我们替你做</p>
+    </div>
+    <div class="client-card">
+      <div class="client-card-tag">H2 推出 MVP</div>
+      <h3>中小商家</h3>
+      <p class="client-card-pain">没预算请团队，也找不到五岗合一的人</p>
+      <p class="client-card-solution">平台：自己用AI工具做</p>
+    </div>
+    <div class="client-card">
+      <div class="client-card-tag">陪跑验证中</div>
+      <h3>一线销售<br>代理人 / 投顾</h3>
+      <p class="client-card-pain">想发短视频获客，但不会拍不会剪没创意</p>
+      <p class="client-card-solution">做同款：选一个爆款，一键生成你的版本</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"><hr></div>
+
+<!-- ════ 现在卖什么 ════ -->
+<section class="section sku-section">
+  <div class="section-label">02 · 现在卖什么</div>
+  <div class="section-title">两大类别，8个可售SKU</div>
+
+  <div class="margin-compare">
+    <div class="margin-box margin-old" style="position:relative">
+      <div class="margin-box-label">传统模式</div>
+      <p class="margin-team">团队配置：<strong>策划 + 编导 + 摄像 + 剪辑 + 设计</strong>（5岗）</p>
+      <div class="margin-bar-wrap"><div class="margin-bar">15%</div></div>
+      <div class="margin-percent">15%<span style="font-size:14px;color:var(--gray-400)"> 毛利率</span></div>
+      <div class="vs-badge">VS</div>
+    </div>
+    <div class="margin-box margin-new">
+      <div class="margin-box-label">AI模式</div>
+      <p class="margin-team">团队配置：<strong>AI设计项目经理 + 剪辑实习生</strong>（1.5人）</p>
+      <div class="margin-bar-wrap"><div class="margin-bar">70%</div></div>
+      <div class="margin-percent">70%<span style="font-size:14px;color:var(--accent)"> 毛利率</span></div>
+    </div>
+  </div>
+
+  <!-- Category 1 -->
+  <div class="sku-category-title">第一类 · 新媒体代运营</div>
+  <p class="sku-category-desc">帮你运营账号 — AI全流程交付品牌内容</p>
+  <div class="sku-grid">
+    <div class="sku-item"><div class="sku-item-name">三大平台官号代运营</div><p class="sku-item-desc">视频号 / 小红书 / 抖音，AI全流程交付品牌内容</p><p class="sku-item-client">→ 企业市场部 / 品牌部</p></div>
+    <div class="sku-item"><div class="sku-item-name">KOS 代运营</div><p class="sku-item-desc">帮代理人/投顾/客户经理运营个人账号，打造销售IP</p><p class="sku-item-client">→ 保险/证券/银行 培训部/数字化部门</p></div>
+    <div class="sku-item"><div class="sku-item-name">达人合作 / 平台投放</div><p class="sku-item-desc">匹配达人资源做种草，代理平台广告投放</p><p class="sku-item-client">→ 有投放预算的品牌方</p></div>
+    <div class="sku-item"><div class="sku-item-name">定制 AI 漫剧</div><p class="sku-item-desc">为品牌定制AI生成的互动漫剧内容</p><p class="sku-item-client">→ 品牌方 campaign 需求</p></div>
+  </div>
+
+  <!-- ═══ 国寿浙分 · AI官号视频内容 ═══ -->
+  <div class="case-mega">
+    <div class="case-mega-header">
+      <div class="case-highlight-label">CASE STUDY · 中国人寿</div>
+      <h2>国寿浙分 · AI官号视频内容</h2>
+      <p>保险行业官号AI视频内容——从医疗险到意外险，AI全流程交付</p>
+    </div>
+    <div class="channel-section">
+      <div class="channel-label">🎬 AI视频内容</div>
+      <div class="phone-gallery">
+        <div class="phone-card phone-card-landscape" onclick="toggleVideo(this)">
+          <video src="产品案例/单条视频案例/长视频-国寿浙分医疗险.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">国寿浙分 · 医疗险</span></div>
+        </div>
+        <div class="phone-card phone-card-landscape" onclick="toggleVideo(this)">
+          <video src="产品案例/单条视频案例/长视频-国寿浙分意外险.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">国寿浙分 · 意外险</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ KOS 做同款 ═══ -->
+  <div class="case-mega">
+    <div class="case-mega-header">
+      <div class="case-highlight-label">CASE STUDY · KOS 代运营</div>
+      <h2>保险 KOS · AI批量生产销售内容</h2>
+      <p>帮代理人批量生产保险科普短视频——口播/轻剧情/节日营销多种模版</p>
+    </div>
+    <div class="channel-section">
+      <div class="channel-label">🎬 KOS短视频内容</div>
+      <div class="phone-gallery">
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/kos 做同款/保险科普 1.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">保险科普 1</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/kos 做同款/保险科普2.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">保险科普 2</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/kos 做同款/保险科普口播.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">保险科普 · 口播</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/kos 做同款/保险科普轻剧情.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">保险科普 · 轻剧情</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/kos 做同款/压岁钱.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">节日营销 · 压岁钱</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 贵烟官号代运营 ═══ -->
+  <div class="case-mega">
+    <div class="case-mega-header">
+      <div class="case-highlight-label">CASE STUDY · 贵州中烟 / 银联</div>
+      <h2>品牌官号 · AI视频内容代运营</h2>
+      <p>烟草/金融行业官号AI视频内容——新年主题、节气节点、产品故事，AI全流程交付</p>
+    </div>
+    <div class="channel-section">
+      <div class="channel-label">🧨 贵烟 · 新年主题系列</div>
+      <div class="phone-gallery">
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟新年主题/3：贵烟_大年初三.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">大年初三</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟新年主题/4：初四灶神.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">初四灶神</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟新年主题/5：初五迎财神3.0.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">初五迎财神</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟新年主题/6定稿：初六开门大吉.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">初六开门大吉</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟新年主题/7定稿：初七人日安康（2月23日）.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">初七人日安康</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟新年主题/8定稿：初八舞龙（2月24日）.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">初八舞龙</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="channel-section">
+      <div class="channel-label">🌿 贵烟 · 节气节点</div>
+      <div class="phone-gallery">
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟节气节点/立春_compressed.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">立春</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟节气节点/雨水.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">雨水</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="channel-section">
+      <div class="channel-label">📦 贵烟 · 产品故事</div>
+      <div class="phone-gallery">
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟产品故事/陈皮精华.mov" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">陈皮精华</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟产品故事/跨越山海系列 1.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">跨越山海 · 1</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟产品故事/跨越山海系列2.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">跨越山海 · 2</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/贵烟产品故事/跨越山海系列3.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">跨越山海 · 3</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="channel-section">
+      <div class="channel-label">💳 银联 95516</div>
+      <div class="phone-gallery">
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/银联 95516/春运.mov" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">春运</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/银联 95516/庙会.mov" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">庙会</span></div>
+        </div>
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/官号代运营/银联 95516/开工.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">开工</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 定制AI漫剧 ═══ -->
+  <div class="case-mega">
+    <div class="case-mega-header">
+      <div class="case-highlight-label">CASE STUDY · 定制AI漫剧</div>
+      <h2>品牌定制 · AI互动漫剧</h2>
+      <p>为品牌定制AI生成的互动漫剧内容——古装/现代多种风格</p>
+    </div>
+    <div class="channel-section">
+      <div class="channel-label">🎭 AI漫剧作品</div>
+      <div class="phone-gallery">
+        <div class="phone-card" onclick="toggleVideo(this)">
+          <video src="产品案例/定制AI漫剧/AI漫剧/低配版_compressed.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">现代版</span></div>
+        </div>
+        <div class="phone-card phone-card-landscape" onclick="toggleVideo(this)">
+          <video src="产品案例/定制AI漫剧/AI漫剧/高配古装.mp4" preload="metadata" playsinline></video>
+          <div class="play-btn">▶</div>
+          <div class="phone-overlay"><span class="phone-name">高配古装版</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 华泰 AI 涨乐 MEGA CASE ═══ -->
+  <div class="case-mega">
+    <div class="case-mega-header">
+      <div class="case-highlight-label">CASE STUDY · 华泰证券</div>
+      <h2>华泰 AI 涨乐 · 全域媒介采购</h2>
+      <p>从明星到KOL到KOC到素人——泛金融领域全层媒介资源覆盖</p>
+    </div>
+
+    <!-- KOL/明星直播 -->
+    <div class="channel-section">
+      <div class="channel-label">🎬 KOL / 明星直播</div>
+      <div class="phone-gallery">
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104606_3190_23.png" alt="明星直播 1"><div class="phone-overlay"><span class="phone-name">明星直播 · 1</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104635_3192_23.png" alt="明星直播 2"><div class="phone-overlay"><span class="phone-name">明星直播 · 2</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104657_3194_23.png" alt="明星直播 3"><div class="phone-overlay"><span class="phone-name">明星直播 · 3</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104713_3196_23.png" alt="明星直播 4"><div class="phone-overlay"><span class="phone-name">明星直播 · 4</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104735_3198_23.png" alt="明星直播 5"><div class="phone-overlay"><span class="phone-name">明星直播 · 5</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104753_3200_23.png" alt="明星直播 6"><div class="phone-overlay"><span class="phone-name">明星直播 · 6</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104807_3202_23.png" alt="明星直播 7"><div class="phone-overlay"><span class="phone-name">明星直播 · 7</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104913_3205_23.jpg" alt="明星直播 8"><div class="phone-overlay"><span class="phone-name">明星直播 · 8</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104914_3206_23.jpg" alt="明星直播 9"><div class="phone-overlay"><span class="phone-name">明星直播 · 9</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol:明星直播/微信图片_20260227104917_3208_23.jpg" alt="明星直播 10"><div class="phone-overlay"><span class="phone-name">明星直播 · 10</span></div></div>
+      </div>
+    </div>
+
+    <!-- KOL 抖音 -->
+    <div class="channel-section">
+      <div class="channel-label">⭐ KOL 抖音</div>
+      <div class="phone-gallery">
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110057.jpg" alt="KOL抖音 1"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 1</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110125.jpg" alt="KOL抖音 2"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 2</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110129.jpg" alt="KOL抖音 3"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 3</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110138.jpg" alt="KOL抖音 4"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 4</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110142.jpg" alt="KOL抖音 5"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 5</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110146.jpg" alt="KOL抖音 6"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 6</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110150.jpg" alt="KOL抖音 7"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 7</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110154.jpg" alt="KOL抖音 8"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 8</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110157.jpg" alt="KOL抖音 9"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 9</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110201.jpg" alt="KOL抖音 10"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 10</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110204.jpg" alt="KOL抖音 11"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 11</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110208.jpg" alt="KOL抖音 12"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 12</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/kol 抖音/微信图片_20260227110212.jpg" alt="KOL抖音 13"><div class="phone-overlay"><span class="phone-name">KOL 抖音 · 13</span></div></div>
+      </div>
+    </div>
+
+    <!-- KOC 抖音 -->
+    <div class="channel-section">
+      <div class="channel-label">🎵 KOC 抖音</div>
+      <div class="phone-gallery">
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110219.jpg" alt="KOC抖音 1"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 1</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110229.jpg" alt="KOC抖音 2"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 2</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110232.jpg" alt="KOC抖音 3"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 3</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110235.jpg" alt="KOC抖音 4"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 4</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110239.jpg" alt="KOC抖音 5"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 5</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110243.jpg" alt="KOC抖音 6"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 6</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110246.jpg" alt="KOC抖音 7"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 7</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110251.jpg" alt="KOC抖音 8"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 8</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110254.jpg" alt="KOC抖音 9"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 9</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110257.jpg" alt="KOC抖音 10"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 10</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110301.jpg" alt="KOC抖音 11"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 11</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110304.jpg" alt="KOC抖音 12"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 12</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/koc 抖音/微信图片_20260227110308.jpg" alt="KOC抖音 13"><div class="phone-overlay"><span class="phone-name">KOC 抖音 · 13</span></div></div>
+      </div>
+    </div>
+
+    <!-- 小红书 -->
+    <div class="channel-section">
+      <div class="channel-label">📕 小红书</div>
+      <div class="phone-gallery">
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110322.png" alt="小红书 1"><div class="phone-overlay"><span class="phone-name">小红书 · 1</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110331.png" alt="小红书 2"><div class="phone-overlay"><span class="phone-name">小红书 · 2</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110335.png" alt="小红书 3"><div class="phone-overlay"><span class="phone-name">小红书 · 3</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110338.png" alt="小红书 4"><div class="phone-overlay"><span class="phone-name">小红书 · 4</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110344.png" alt="小红书 5"><div class="phone-overlay"><span class="phone-name">小红书 · 5</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110347.png" alt="小红书 6"><div class="phone-overlay"><span class="phone-name">小红书 · 6</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110350.png" alt="小红书 7"><div class="phone-overlay"><span class="phone-name">小红书 · 7</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110357.png" alt="小红书 8"><div class="phone-overlay"><span class="phone-name">小红书 · 8</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110401.png" alt="小红书 9"><div class="phone-overlay"><span class="phone-name">小红书 · 9</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110405.png" alt="小红书 10"><div class="phone-overlay"><span class="phone-name">小红书 · 10</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110409.png" alt="小红书 11"><div class="phone-overlay"><span class="phone-name">小红书 · 11</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110413.png" alt="小红书 12"><div class="phone-overlay"><span class="phone-name">小红书 · 12</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110416.png" alt="小红书 13"><div class="phone-overlay"><span class="phone-name">小红书 · 13</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110429.png" alt="小红书 14"><div class="phone-overlay"><span class="phone-name">小红书 · 14</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110433.png" alt="小红书 15"><div class="phone-overlay"><span class="phone-name">小红书 · 15</span></div></div>
+        <div class="phone-card phone-card-landscape"><img src="产品案例/媒介采购-华泰AI 涨乐案例/小红书/微信图片_20260227110438.png" alt="小红书 16"><div class="phone-overlay"><span class="phone-name">小红书 · 16</span></div></div>
+      </div>
+    </div>
+
+    <!-- 雪球 -->
+    <div class="channel-section">
+      <div class="channel-label">📊 雪球</div>
+      <div class="phone-gallery">
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/雪球/微信图片_2026-02-27_110603_924.png" alt="雪球 1"><div class="phone-overlay"><span class="phone-name">雪球 · 1</span></div></div>
+        <div class="phone-card"><img src="产品案例/媒介采购-华泰AI 涨乐案例/雪球/微信图片_2026-02-27_110616_942.png" alt="雪球 2"><div class="phone-overlay"><span class="phone-name">雪球 · 2</span></div></div>
+        <div class="phone-card phone-card-narrow"><img src="产品案例/媒介采购-华泰AI 涨乐案例/雪球/微信图片_2026-02-27_110630_367.jpg" alt="雪球 3"><div class="phone-overlay"><span class="phone-name">雪球 · 长文 1</span></div></div>
+        <div class="phone-card phone-card-narrow"><img src="产品案例/媒介采购-华泰AI 涨乐案例/雪球/微信图片_2026-02-27_110637_046.jpg" alt="雪球 4"><div class="phone-overlay"><span class="phone-name">雪球 · 长文 2</span></div></div>
+        <div class="phone-card phone-card-narrow"><img src="产品案例/媒介采购-华泰AI 涨乐案例/雪球/微信图片_2026-02-27_110644_935.jpg" alt="雪球 5"><div class="phone-overlay"><span class="phone-name">雪球 · 长文 3</span></div></div>
+        <div class="phone-card phone-card-narrow"><img src="产品案例/媒介采购-华泰AI 涨乐案例/雪球/微信图片_2026-02-27_110650_283.jpg" alt="雪球 6"><div class="phone-overlay"><span class="phone-name">雪球 · 长文 4</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category 2 -->
+  <div class="sku-category-title">第二类 · AI 互动营销玩法</div>
+  <p class="sku-category-desc">帮你做营销活动 — AI把玩法模版化，选主题+配参数，快速上线</p>
+  <div class="sku-grid">
+    <div class="sku-item"><div class="sku-item-name">一键做同款</div><p class="sku-item-desc">用户上传照片，AI生成主题风格同款（国风/节日/品牌联名等）</p><p class="sku-item-client">→ 品牌节日营销、线下活动引流</p></div>
+    <div class="sku-item"><div class="sku-item-name">定制产品投票</div><p class="sku-item-desc">用户输入文字描述，AI在产品上生成定制效果，发起投票互动</p><p class="sku-item-client">→ 品牌让用户共创并投票</p></div>
+    <div class="sku-item"><div class="sku-item-name">AI 互动漫剧</div><p class="sku-item-desc">用户选择角色和剧情走向，AI生成品牌互动漫剧</p><p class="sku-item-client">→ 品牌故事传播、产品教育</p></div>
+    <div class="sku-item"><div class="sku-item-name">更多玩法</div><p class="sku-item-desc">集卡、红包封面、AI共创等，可根据客户需求定制</p><p class="sku-item-client">→ 持续开发中</p></div>
+  </div>
+</section>
+
+<div class="section-divider"><hr></div>
+
+<!-- ════ FUTURE ════ -->
+<section class="section">
+  <div class="section-label">03 · 未来卖什么</div>
+  <div class="section-title">"我们帮你做" → "你自己做"</div>
+  <p class="section-desc">现在的服务是"我们帮你做"，未来的平台是"你自己做"。两个平台分别对应两类SKU的规模化版本。</p>
+  <div class="future-grid">
+    <div class="future-card">
+      <div class="future-card-tag">产品一 · 给中小商家</div>
+      <h3>AI 品牌内容创作中心</h3>
+      <div class="future-card-insight">大客户请得起代运营，但大量中小商家请不起——他们需要的不是"帮我做"，而是"让我自己能做"。</div>
+      <div class="future-card-flow"><span class="step">选热点/产品</span><span class="arrow">→</span><span class="step">AI出10个创意</span><span class="arrow">→</span><span class="step">选一个</span><span class="arrow">→</span><span class="step">自动生成视频</span></div>
+      <p style="margin-top:12px;font-size:13px;color:var(--gray-600)">从追热点到出片，<strong>30 分钟</strong></p>
+      <div class="future-card-ref">Ref: Creatify（'25 融资 $23M）</div>
+    </div>
+    <div class="future-card">
+      <div class="future-card-tag">产品二 · 给代理人/投顾</div>
+      <h3>销售做同款工具</h3>
+      <div class="future-card-insight">每家保险公司有几万个代理人想发短视频获客，KOS代运营一次只能服务几十人，平台工具能服务几万人。</div>
+      <div class="future-card-flow"><span class="step">选爆款视频</span><span class="arrow">→</span><span class="step">录段音/传张照片</span><span class="arrow">→</span><span class="step">AI生成"我的版本"</span></div>
+      <p style="margin-top:12px;font-size:13px;color:var(--gray-600)"><strong>3 步，3 分钟</strong></p>
+      <div class="future-card-ref">壁垒: 别人卖工具没内容，做内容的不做工具</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="flywheel-wrap">
+    <div class="flywheel-title">飞轮效应</div>
+    <div class="flywheel-chain">
+      <div class="flywheel-node"><div class="flywheel-node-icon">🔧</div><div class="flywheel-node-title">服务大客户</div><div class="flywheel-node-sub">代运营 + 互动活动</div></div>
+      <div class="flywheel-arrow">→</div>
+      <div class="flywheel-node"><div class="flywheel-node-icon">📦</div><div class="flywheel-node-title">沉淀模版</div><div class="flywheel-node-sub">行业内容模版 + 玩法模块</div></div>
+      <div class="flywheel-arrow">→</div>
+      <div class="flywheel-node"><div class="flywheel-node-icon">🚀</div><div class="flywheel-node-title">喂养平台</div><div class="flywheel-node-sub">内容创作中心 + 做同款</div></div>
+      <div class="flywheel-arrow">→</div>
+      <div class="flywheel-node"><div class="flywheel-node-icon">💰</div><div class="flywheel-node-title">边际成本→0</div><div class="flywheel-node-sub">从卖人力变成收租</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CAPITAL STORY ════ -->
+<section class="story-section">
+  <div class="story-inner">
+    <div class="section-label" style="color:var(--accent2)">04 · 资本市场故事</div>
+    <div class="section-title" style="color:var(--paper)">三段叙事</div>
+    <div class="story-steps">
+      <div class="story-step"><div class="story-step-num">01</div><h4>起点</h4><p>从代运营和AI互动营销切入，已服务 60+ 金融和消费品客户，AI让毛利从 15% 做到 70%。</p></div>
+      <div class="story-step"><div class="story-step-num">02</div><h4>飞轮</h4><p>服务不是终局，是数据采集器——每做一个项目，就多沉淀一套行业模版和玩法模块，喂养出两个平台。</p></div>
+      <div class="story-step"><div class="story-step-num">03</div><h4>终局</h4><p>平台模式。一套模版卖给 1 个人和卖给 10 万人，边际成本趋近于零。从"卖人力"变成"收租"。</p></div>
+    </div>
+    <div class="story-data">
+      <div class="story-datum"><div class="story-datum-value">60+</div><div class="story-datum-label">存量客户 · 行业渗透</div></div>
+      <div class="story-datum"><div class="story-datum-value">15→70%</div><div class="story-datum-label">毛利飞跃 · 技术杠杆</div></div>
+      <div class="story-datum"><div class="story-datum-value">20</div><div class="story-datum-label">行业案例 · 可复制性</div></div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+function toggleVideo(card) {
+  var video = card.querySelector('video');
+  var btn = card.querySelector('.play-btn');
+  if (!video) return;
+  if (video.paused) {
+    // Pause all other videos first
+    document.querySelectorAll('.phone-card video').forEach(function(v) {
+      if (v !== video && !v.paused) {
+        v.pause();
+        v.closest('.phone-card').querySelector('.play-btn').classList.remove('hidden');
+      }
+    });
+    video.play();
+    btn.classList.add('hidden');
+  } else {
+    video.pause();
+    btn.classList.remove('hidden');
+  }
+}
+// Show play button again when video ends
+document.querySelectorAll('.phone-card video').forEach(function(v) {
+  v.addEventListener('ended', function() {
+    var btn = this.closest('.phone-card').querySelector('.play-btn');
+    if (btn) btn.classList.remove('hidden');
+  });
+});
+</script>
+</body>
+</html>
